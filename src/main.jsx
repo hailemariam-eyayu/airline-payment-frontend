@@ -2,16 +2,14 @@ import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import App2 from './App2.jsx'
 import RidePayment from './RidePayment.jsx'
 
 function Root() {
-  // null = landing, 'validate' = App, 'direct' = App2, 'ride' = RidePayment
+  // null = landing, 'airline' = App, 'ride' = RidePayment
   const [view, setView] = useState(null);
 
-  if (view === 'validate') return <App onBack={() => setView(null)} />;
-  if (view === 'direct')   return <App2 onBack={() => setView(null)} />;
-  if (view === 'ride')     return <RidePayment onBack={() => setView(null)} />;
+  if (view === 'airline') return <App onBack={() => setView(null)} />;
+  if (view === 'ride')    return <RidePayment onBack={() => setView(null)} />;
 
   // ── Landing page ──────────────────────────────────────────────────────────
   return (
@@ -24,19 +22,11 @@ function Root() {
         {/* ── Airline section ── */}
         <p style={landing.sectionLabel}>✈ Airline Ticket</p>
         <div style={landing.btnGroup}>
-          <button style={landing.btnPrimary} onClick={() => setView('validate')}>
-            <span style={landing.btnIcon}>✔</span>
+          <button style={landing.btnPrimary} onClick={() => setView('airline')}>
+            <span style={landing.btnIcon}>✈</span>
             <span>
-              <strong>Pay with Validate</strong>
-              <small style={landing.btnHint}>Verify order details before paying</small>
-            </span>
-          </button>
-
-          <button style={landing.btnOutline} onClick={() => setView('direct')}>
-            <span style={landing.btnIcon}>⚡</span>
-            <span>
-              <strong>Pay without Validate</strong>
-              <small style={landing.btnHint}>Skip validation, confirm directly</small>
+              <strong>Airline Ticket Payment</strong>
+              <small style={landing.btnHint}>Verify order and pay</small>
             </span>
           </button>
         </div>
@@ -114,20 +104,6 @@ const landing = {
     border: 'none',
     background: '#2563eb',
     color: '#fff',
-    fontSize: '14px',
-    cursor: 'pointer',
-    textAlign: 'left',
-    width: '100%',
-  },
-  btnOutline: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    padding: '14px 18px',
-    borderRadius: '10px',
-    border: '2px solid #2563eb',
-    background: '#fff',
-    color: '#2563eb',
     fontSize: '14px',
     cursor: 'pointer',
     textAlign: 'left',
