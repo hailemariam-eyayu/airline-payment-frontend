@@ -65,12 +65,12 @@ export const rideService = {
     };
   },
 
-  // POST /ride/pay  { phone, amount, drAcNo, drBranch, remark, billRefNo }
-  pay: async ({ phone, amount, drAcNo, drBranch, remark, billRefNo }) => {
+  // POST /ride/pay  { auditId, phone, amount, drAcNo, drBranch, remark, billRefNo }
+  pay: async ({ auditId, phone, amount, drAcNo, drBranch, remark, billRefNo }) => {
     const response = await fetch(`${BASE_URL}/ride/pay`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, amount: Number(amount), drAcNo, drBranch, remark, billRefNo }),
+      body: JSON.stringify({ auditId, phone, amount: Number(amount), drAcNo, drBranch, remark, billRefNo }),
     });
     let result;
     try {

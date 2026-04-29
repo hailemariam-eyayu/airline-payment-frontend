@@ -107,6 +107,7 @@ export default function RidePayment({ onBack }) {
     setLoading(true);
     try {
       const res = await rideService.pay({
+        auditId:   queryResult?.auditId,   // pass back so backend updates same row
         phone:     phone.trim(),
         amount:    amount.trim(),
         drAcNo:    drAcNo.trim(),
