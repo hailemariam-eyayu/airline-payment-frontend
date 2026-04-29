@@ -229,9 +229,6 @@ export default function RidePayment({ onBack }) {
                 value={drAcNo}
                 onChange={(e) => setDrAcNo(e.target.value)}
               />
-                value={drBranch}
-                onChange={(e) => setDrBranch(e.target.value)}
-              />
 
               <label style={s.label}>
                 Remark <span style={s.optional}>(optional)</span>
