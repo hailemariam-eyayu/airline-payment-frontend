@@ -71,15 +71,15 @@ export default function RidePayment({ onBack }) {
   const [step, setStep]       = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // step 1
-  const [phone, setPhone]           = useState('');
+  // step 1 — phone split into prefix + local
+  const [localPhone, setLocalPhone] = useState('');   // user types: 911259134
   const [queryResult, setQueryResult] = useState(null);
+  const fullPhone = `251${localPhone}`;               // sent to API: 251911259134
 
   // step 2
-  const [drAcNo, setDrAcNo]     = useState('');
-  const [drBranch, setDrBranch] = useState('');
-  const [amount, setAmount]     = useState('');
-  const [remark, setRemark]     = useState('');
+  const [drAcNo, setDrAcNo] = useState('');
+  const [amount, setAmount] = useState('');
+  const [remark, setRemark] = useState('');
 
 
   // step 3
@@ -88,10 +88,15 @@ export default function RidePayment({ onBack }) {
   // ── Step 1: query phone ───────────────────────────────────────────────────
   const handleQuery = async (e) => {
     e.preventDefault();
+    // Validate: local part must start with 9 or 7 and be exactly 9 digits
+    if (!/^[79]\d{8}$/.test(localPhone)) {
+      setQueryResult({ status: 'Error', message: 'Phone must start with 9 or 7 and be 9 digits (e.g. 911259134)', httpStatus: 0 });
+      return;
+    }
     setLoading(true);
     setQueryResult(null);
     try {
-      const res = await rideService.queryAccount(phone.trim());
+      const res = await rideService.queryAccount(fullPhone);
       setQueryResult(res);
       if (res.status === 'Success') setStep(2);
     } catch (err) {
@@ -107,12 +112,11 @@ export default function RidePayment({ onBack }) {
     setLoading(true);
     try {
       const res = await rideService.pay({
-        auditId:   queryResult?.auditId,   // pass back so backend updates same row
-        phone:     phone.trim(),
+        auditId:   queryResult?.auditId,
+        phone:     fullPhone,
         amount:    amount.trim(),
         drAcNo:    drAcNo.trim(),
-        drBranch:  drBranch.trim() || undefined,
-        remark:    remark.trim()   || undefined,
+        remark:    remark.trim() || undefined,
       });
       setPayResult(res);
       setStep(3);
@@ -126,8 +130,8 @@ export default function RidePayment({ onBack }) {
 
   const handleReset = () => {
     setStep(1);
-    setPhone(''); setQueryResult(null);
-    setDrAcNo(''); setDrBranch(''); setAmount(''); setRemark('');
+    setLocalPhone(''); setQueryResult(null);
+    setDrAcNo(''); setAmount(''); setRemark('');
     setPayResult(null);
   };
 
@@ -159,14 +163,18 @@ export default function RidePayment({ onBack }) {
             </p>
             <form onSubmit={handleQuery} style={s.form}>
               <label style={s.label}>Phone Number</label>
-              <input
-                required
-                style={s.input}
-                placeholder="e.g. 251911259134"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                type="tel"
-              />
+              <div style={s.phoneRow}>
+                <span style={s.phonePrefix}>251</span>
+                <input
+                  required
+                  style={s.phoneInput}
+                  placeholder="911259134"
+                  value={localPhone}
+                  onChange={(e) => setLocalPhone(e.target.value.replace(/\D/g, '').slice(0, 9))}
+                  type="tel"
+                  maxLength={9}
+                />
+              </div>
               <button style={s.btnPurple} type="submit" disabled={loading}>
                 {loading ? 'Verifying…' : 'Verify Account'}
               </button>
@@ -221,13 +229,6 @@ export default function RidePayment({ onBack }) {
                 value={drAcNo}
                 onChange={(e) => setDrAcNo(e.target.value)}
               />
-
-              <label style={s.label}>
-                Branch Code <span style={s.optional}>(optional)</span>
-              </label>
-              <input
-                style={s.input}
-                placeholder="e.g. 001"
                 value={drBranch}
                 onChange={(e) => setDrBranch(e.target.value)}
               />
@@ -406,6 +407,35 @@ const s = {
     background: '#fafafa',
     width: '100%',
     boxSizing: 'border-box',
+  },
+  phoneRow: {
+    display: 'flex',
+    alignItems: 'center',
+    border: '1.5px solid #e5e7eb',
+    borderRadius: '10px',
+    overflow: 'hidden',
+    background: '#fafafa',
+  },
+  phonePrefix: {
+    padding: '11px 13px',
+    background: '#f3f4f6',
+    color: '#374151',
+    fontWeight: 700,
+    fontSize: '14px',
+    borderRight: '1.5px solid #e5e7eb',
+    userSelect: 'none',
+    flexShrink: 0,
+    letterSpacing: '0.5px',
+  },
+  phoneInput: {
+    flex: 1,
+    padding: '11px 13px',
+    border: 'none',
+    outline: 'none',
+    fontSize: '14px',
+    color: '#0f172a',
+    background: 'transparent',
+    minWidth: 0,
   },
   btnPurple: {
     padding: '13px',
