@@ -266,7 +266,6 @@ export default function RidePayment({ onBack }) {
                   <InfoRow label="Amount"          value={`ETB ${Number(amount).toLocaleString()}`} />
                   <InfoRow label="Acknowledgement" value={payResult.acknowledgementId} />
                   <InfoRow label="CBS Reference"   value={payResult.cbsRefNo} />
-                  <InfoRow label="CBS Trace No."   value={payResult.cbsTraceNo} />
                   <InfoRow label="Bill Ref"        value={payResult.billRefNo} />
                 </div>
               </>
