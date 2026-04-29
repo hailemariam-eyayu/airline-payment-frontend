@@ -1,12 +1,18 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// Channel identifies which frontend this request came from (IB, MB, USSD, etc.)
+// Set VITE_CHANNEL in .env — never hardcode it here.
+const CHANNEL  = import.meta.env.VITE_CHANNEL || "IB";
+
+// Helper: add channel to any payload
+const withChannel = (payload) => ({ ...payload, channel: CHANNEL });
 
 export const airlineService = {
-  // POST /airline/validate  { orderid }
+  // POST /airline/validate  { orderid, channel }
   validateOrder: async (orderid) => {
     const response = await fetch(`${BASE_URL}/airline/validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderid }),
+      body: JSON.stringify(withChannel({ orderid })),
     });
     let result;
     try {
@@ -17,12 +23,12 @@ export const airlineService = {
     return result;
   },
 
-  // POST /airline/confirm  { orderid, beneficiaryAcno, amount, remark }
-  confirmPayment: async ({ orderid, beneficiaryAcno, amount, remark, branchCode }) => {
+  // POST /airline/confirm  { orderid, beneficiaryAcno, amount, remark, channel }
+  confirmPayment: async ({ orderid, beneficiaryAcno, amount, remark }) => {
     const response = await fetch(`${BASE_URL}/airline/confirm`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderid, beneficiaryAcno, amount, remark, branchCode }),
+      body: JSON.stringify(withChannel({ orderid, beneficiaryAcno, amount, remark })),
     });
     let result;
     try {
@@ -35,12 +41,12 @@ export const airlineService = {
 };
 
 export const rideService = {
-  // POST /ride/query  { phone }
+  // POST /ride/query  { phone, channel }
   queryAccount: async (phone) => {
     const response = await fetch(`${BASE_URL}/ride/query`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone }),
+      body: JSON.stringify(withChannel({ phone })),
     });
     let body;
     try {
@@ -48,8 +54,6 @@ export const rideService = {
     } catch {
       body = {};
     }
-    // Normalise: always expose a top-level message so the UI can display it
-    // regardless of whether the server wraps it in data{} or puts it at root.
     const message =
       body.message ??
       body.data?.message ??
@@ -60,17 +64,16 @@ export const rideService = {
       ...body,
       message,
       httpStatus: response.status,
-      // treat any 2xx with no explicit status field as Success
       status: body.status ?? (response.ok ? 'Success' : 'Error'),
     };
   },
 
-  // POST /ride/pay  { auditId, phone, amount, drAcNo, remark, billRefNo }
+  // POST /ride/pay  { auditId, phone, amount, drAcNo, remark, billRefNo, channel }
   pay: async ({ auditId, phone, amount, drAcNo, remark, billRefNo }) => {
     const response = await fetch(`${BASE_URL}/ride/pay`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ auditId, phone, amount: Number(amount), drAcNo, remark, billRefNo }),
+      body: JSON.stringify(withChannel({ auditId, phone, amount: Number(amount), drAcNo, remark, billRefNo })),
     });
     let result;
     try {
