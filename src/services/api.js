@@ -84,3 +84,31 @@ export const rideService = {
     return { ...result, httpStatus: response.status };
   },
 };
+
+export const a2aService = {
+  // POST /a2a/validate  { drAcNo, crAcNo, channel }
+  validateAccounts: async ({ drAcNo, crAcNo }) => {
+    const response = await fetch(`${BASE_URL}/a2a/validate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(withChannel({ drAcNo, crAcNo })),
+    });
+    let result;
+    try { result = await response.json(); }
+    catch { result = { status: 'Error', message: 'Invalid JSON response from server' }; }
+    return { ...result, httpStatus: response.status };
+  },
+
+  // POST /a2a/transfer  { drAcNo, crAcNo, amount, narrative, channel }
+  transfer: async ({ drAcNo, crAcNo, amount, narrative }) => {
+    const response = await fetch(`${BASE_URL}/a2a/transfer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(withChannel({ drAcNo, crAcNo, amount: Number(amount), narrative })),
+    });
+    let result;
+    try { result = await response.json(); }
+    catch { result = { status: 'Error', message: 'Invalid JSON response from server' }; }
+    return { ...result, httpStatus: response.status };
+  },
+};

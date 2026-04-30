@@ -3,27 +3,34 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import RidePayment from './RidePayment.jsx'
+import A2ATransfer from './A2ATransfer.jsx'
+import enatLogo from './assets/Enat_Bank.png'
+import etLogo from './assets/ethiopian-airlines.svg'
 
 function Root() {
-  // null = landing, 'airline' = App, 'ride' = RidePayment
+  // null = landing, 'airline' = App, 'ride' = RidePayment, 'a2a' = A2ATransfer
   const [view, setView] = useState(null);
 
   if (view === 'airline') return <App onBack={() => setView(null)} />;
   if (view === 'ride')    return <RidePayment onBack={() => setView(null)} />;
+  if (view === 'a2a')     return <A2ATransfer onBack={() => setView(null)} />;
 
   // ── Landing page ──────────────────────────────────────────────────────────
   return (
     <div style={landing.page}>
       <div style={landing.card}>
-        <div style={landing.icon}>🏦</div>
+        {/* Enat Bank logo */}
+        <img src={enatLogo} alt="Enat Bank" style={landing.enatLogo} />
         <h1 style={landing.title}>Enat Bank Payments</h1>
         <p style={landing.subtitle}>Select a payment service to continue</p>
 
         {/* ── Airline section ── */}
-        <p style={landing.sectionLabel}>✈ Airline Ticket</p>
+        <p style={landing.sectionLabel}>
+          <img src={etLogo} alt="" style={landing.sectionIcon} /> Airline Ticket
+        </p>
         <div style={landing.btnGroup}>
           <button style={landing.btnPrimary} onClick={() => setView('airline')}>
-            <span style={landing.btnIcon}>✈</span>
+            <img src={etLogo} alt="Ethiopian Airlines" style={landing.btnLogo} />
             <span>
               <strong>Airline Ticket Payment</strong>
               <small style={landing.btnHint}>Verify order and pay</small>
@@ -39,6 +46,18 @@ function Root() {
             <span>
               <strong>Ride Payment</strong>
               <small style={landing.btnHint}>Top-up a Ride ET account</small>
+            </span>
+          </button>
+        </div>
+
+        {/* ── A2A section ── */}
+        <p style={{ ...landing.sectionLabel, marginTop: '24px' }}>🔄 Account Transfer</p>
+        <div style={landing.btnGroup}>
+          <button style={landing.btnA2A} onClick={() => setView('a2a')}>
+            <span style={landing.btnIcon}>🔄</span>
+            <span>
+              <strong>Account to Account</strong>
+              <small style={landing.btnHint}>Transfer between accounts</small>
             </span>
           </button>
         </div>
@@ -66,9 +85,28 @@ const landing = {
     maxWidth: '420px',
     textAlign: 'center',
   },
-  icon: {
-    fontSize: '48px',
+  enatLogo: {
+    width: '100px',
+    height: 'auto',
     marginBottom: '12px',
+    display: 'block',
+    margin: '0 auto 12px',
+  },
+  sectionIcon: {
+    height: '14px',
+    width: 'auto',
+    verticalAlign: 'middle',
+    marginRight: '4px',
+    objectFit: 'contain',
+  },
+  btnLogo: {
+    height: '28px',
+    width: 'auto',
+    flexShrink: 0,
+    objectFit: 'contain',
+    background: '#fff',
+    borderRadius: '4px',
+    padding: '2px 4px',
   },
   title: {
     margin: '0 0 8px',
@@ -117,6 +155,20 @@ const landing = {
     borderRadius: '10px',
     border: 'none',
     background: '#7c3aed',
+    color: '#fff',
+    fontSize: '14px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    width: '100%',
+  },
+  btnA2A: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '14px',
+    padding: '14px 18px',
+    borderRadius: '10px',
+    border: 'none',
+    background: '#0f766e',
     color: '#fff',
     fontSize: '14px',
     cursor: 'pointer',
