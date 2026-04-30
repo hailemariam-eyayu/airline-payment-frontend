@@ -29,7 +29,7 @@ function Root() {
           <img src={etLogo} alt="" style={landing.sectionIcon} /> Airline Ticket
         </p>
         <div style={landing.btnGroup}>
-          <button style={landing.btnPrimary} onClick={() => setView('airline')}>
+          <button style={landing.btnAirline} onClick={() => setView('airline')}>
             <img src={etLogo} alt="Ethiopian Airlines" style={landing.btnLogo} />
             <span>
               <strong>Airline Ticket Payment</strong>
@@ -41,7 +41,7 @@ function Root() {
         {/* ── Ride section ── */}
         <p style={{ ...landing.sectionLabel, marginTop: '24px' }}>🛵 Ride ET</p>
         <div style={landing.btnGroup}>
-          <button style={landing.btnPrimary} onClick={() => setView('ride')}>
+          <button style={landing.btnRide} onClick={() => setView('ride')}>
             <span style={landing.btnIcon}>🛵</span>
             <span>
               <strong>Ride Payment</strong>
@@ -53,7 +53,7 @@ function Root() {
         {/* ── A2A section ── */}
         <p style={{ ...landing.sectionLabel, marginTop: '24px' }}>🔄 Account Transfer</p>
         <div style={landing.btnGroup}>
-          <button style={landing.btnPrimary} onClick={() => setView('a2a')}>
+          <button style={landing.btnA2A} onClick={() => setView('a2a')}>
             <span style={landing.btnIcon}>🔄</span>
             <span>
               <strong>Account to Account</strong>
@@ -69,7 +69,7 @@ function Root() {
 const landing = {
   page: {
     minHeight: '100vh',
-    background: '#f1f5f9',
+    background: '#f0f4f8',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -133,14 +133,45 @@ const landing = {
     flexDirection: 'column',
     gap: '10px',
   },
-  btnPrimary: {
+  // Airline — deep blue (matches Ethiopian Airlines brand)
+  btnAirline: {
     display: 'flex',
     alignItems: 'center',
     gap: '14px',
     padding: '14px 18px',
     borderRadius: '10px',
     border: 'none',
-    background: '#1a56db',
+    background: '#1a3c8f',
+    color: '#fff',
+    fontSize: '14px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    width: '100%',
+  },
+  // Ride — purple
+  btnRide: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '14px',
+    padding: '14px 18px',
+    borderRadius: '10px',
+    border: 'none',
+    background: '#7c3aed',
+    color: '#fff',
+    fontSize: '14px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    width: '100%',
+  },
+  // A2A — teal/green
+  btnA2A: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '14px',
+    padding: '14px 18px',
+    borderRadius: '10px',
+    border: 'none',
+    background: '#d116e2ff',
     color: '#fff',
     fontSize: '14px',
     cursor: 'pointer',
