@@ -41,7 +41,7 @@ function Root() {
         {/* ── Ride section ── */}
         <p style={{ ...landing.sectionLabel, marginTop: '24px' }}>🛵 Ride ET</p>
         <div style={landing.btnGroup}>
-          <button style={landing.btnRide} onClick={() => setView('ride')}>
+          <button style={landing.btnPrimary} onClick={() => setView('ride')}>
             <span style={landing.btnIcon}>🛵</span>
             <span>
               <strong>Ride Payment</strong>
@@ -53,7 +53,7 @@ function Root() {
         {/* ── A2A section ── */}
         <p style={{ ...landing.sectionLabel, marginTop: '24px' }}>🔄 Account Transfer</p>
         <div style={landing.btnGroup}>
-          <button style={landing.btnA2A} onClick={() => setView('a2a')}>
+          <button style={landing.btnPrimary} onClick={() => setView('a2a')}>
             <span style={landing.btnIcon}>🔄</span>
             <span>
               <strong>Account to Account</strong>
@@ -82,7 +82,7 @@ const landing = {
     boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
     padding: '40px 32px',
     width: '100%',
-    maxWidth: '420px',
+    maxWidth: '460px',
     textAlign: 'center',
   },
   enatLogo: {
@@ -140,35 +140,7 @@ const landing = {
     padding: '14px 18px',
     borderRadius: '10px',
     border: 'none',
-    background: '#2563eb',
-    color: '#fff',
-    fontSize: '14px',
-    cursor: 'pointer',
-    textAlign: 'left',
-    width: '100%',
-  },
-  btnRide: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    padding: '14px 18px',
-    borderRadius: '10px',
-    border: 'none',
-    background: '#7c3aed',
-    color: '#fff',
-    fontSize: '14px',
-    cursor: 'pointer',
-    textAlign: 'left',
-    width: '100%',
-  },
-  btnA2A: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    padding: '14px 18px',
-    borderRadius: '10px',
-    border: 'none',
-    background: '#0f766e',
+    background: '#1a56db',
     color: '#fff',
     fontSize: '14px',
     cursor: 'pointer',

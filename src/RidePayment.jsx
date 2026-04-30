@@ -11,7 +11,7 @@ function InfoRow({ label, value }) {
   );
 }
 
-// ── Stepper — matches screenshot layout ──────────────────────────────────────
+// ── Stepper ──────────────────────────────────────────────────────────────────
 const STEPS = ['Verify Phone', 'Payment Details', 'Result'];
 
 function Stepper({ current }) {
@@ -27,20 +27,20 @@ function Stepper({ current }) {
             {i > 0 && (
               <div style={{
                 ...s.line,
-                background: done || active ? '#7c3aed' : '#d1d5db',
+                background: done || active ? '#1a56db' : '#e5e7eb',
               }} />
             )}
             <div style={s.stepCol}>
               <div style={{
                 ...s.circle,
-                background: active ? '#7c3aed' : done ? '#7c3aed' : '#e5e7eb',
+                background: active ? '#1a56db' : done ? '#16a34a' : '#e5e7eb',
                 color:      active || done ? '#fff' : '#9ca3af',
               }}>
                 {done ? '✓' : num}
               </div>
               <span style={{
                 ...s.stepLabel,
-                color:      active ? '#7c3aed' : done ? '#7c3aed' : '#9ca3af',
+                color:      active ? '#1a56db' : done ? '#16a34a' : '#9ca3af',
                 fontWeight: active ? 600 : 400,
               }}>
                 {label}
@@ -56,11 +56,8 @@ function Stepper({ current }) {
 // ── extract a readable message from any response shape ───────────────────────
 function extractMessage(res) {
   if (!res) return 'Unknown error';
-  // top-level message field
   if (res.message && typeof res.message === 'string') return res.message;
-  // nested data.message
   if (res.data?.message) return res.data.message;
-  // nested error field
   if (res.error)  return res.error;
   if (res.errors) return Array.isArray(res.errors) ? res.errors.join(', ') : String(res.errors);
   return `HTTP ${res.httpStatus ?? 'Error'}`;
@@ -80,7 +77,6 @@ export default function RidePayment({ onBack }) {
   const [drAcNo, setDrAcNo] = useState('');
   const [amount, setAmount] = useState('');
   const [remark, setRemark] = useState('');
-
 
   // step 3
   const [payResult, setPayResult] = useState(null);
@@ -175,7 +171,7 @@ export default function RidePayment({ onBack }) {
                   maxLength={9}
                 />
               </div>
-              <button style={s.btnPurple} type="submit" disabled={loading}>
+              <button style={s.btnPrimary} type="submit" disabled={loading}>
                 {loading ? 'Verifying…' : 'Verify Account'}
               </button>
             </form>
@@ -244,7 +240,7 @@ export default function RidePayment({ onBack }) {
                 <button type="button" style={s.btnGhost} onClick={() => setStep(1)}>
                   ← Change Phone
                 </button>
-                <button style={s.btnPurple} type="submit" disabled={loading}>
+                <button style={s.btnPrimary} type="submit" disabled={loading}>
                   {loading ? 'Processing…' : 'Pay Now'}
                 </button>
               </div>
@@ -260,7 +256,7 @@ export default function RidePayment({ onBack }) {
                 <div style={s.iconSuccess}>✅</div>
                 <p style={s.successTitle}>Payment Successful</p>
                 <div style={s.infoCard}>
-                  <InfoRow label="Phone"           value={phone} />
+                  <InfoRow label="Phone"           value={fullPhone} />
                   <InfoRow label="Amount"          value={`ETB ${Number(amount).toLocaleString()}`} />
                   <InfoRow label="Acknowledgement" value={payResult.acknowledgementId} />
                   <InfoRow label="CBS Reference"   value={payResult.cbsRefNo} />
@@ -284,7 +280,7 @@ export default function RidePayment({ onBack }) {
             )}
             <div style={s.btnRow}>
               <button style={s.btnGhost} onClick={onBack}>← Home</button>
-              <button style={isSuccess ? s.btnPrimary : s.btnPurple} onClick={handleReset}>
+              <button style={isSuccess ? s.btnPrimary : s.btnDanger} onClick={handleReset}>
                 {isSuccess ? 'New Payment' : 'Try Again'}
               </button>
             </div>
@@ -300,7 +296,7 @@ export default function RidePayment({ onBack }) {
 const s = {
   page: {
     minHeight: '100vh',
-    background: '#f5f3ff',
+    background: '#f1f5f9',
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -310,15 +306,15 @@ const s = {
   card: {
     background: '#fff',
     borderRadius: '16px',
-    boxShadow: '0 4px 32px rgba(124,58,237,0.10)',
-    padding: '32px 28px 36px',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+    padding: '32px 28px',
     width: '100%',
-    maxWidth: '480px',
+    maxWidth: '460px',
   },
   backLink: {
     background: 'none',
     border: 'none',
-    color: '#7c3aed',
+    color: '#1a56db',
     fontSize: '14px',
     fontWeight: 500,
     cursor: 'pointer',
@@ -346,7 +342,7 @@ const s = {
   line: {
     height: '2px',
     width: '52px',
-    marginBottom: '22px',   // vertically aligns with circle center
+    marginBottom: '22px',
     flexShrink: 0,
   },
   stepCol: {
@@ -434,11 +430,11 @@ const s = {
     background: 'transparent',
     minWidth: 0,
   },
-  btnPurple: {
+  btnPrimary: {
     padding: '13px',
     borderRadius: '10px',
     border: 'none',
-    background: '#7c3aed',
+    background: '#1a56db',
     color: '#fff',
     fontSize: '15px',
     fontWeight: 700,
@@ -446,11 +442,11 @@ const s = {
     flex: 1,
     width: '100%',
   },
-  btnPrimary: {
+  btnDanger: {
     padding: '13px',
     borderRadius: '10px',
     border: 'none',
-    background: '#2563eb',
+    background: '#dc2626',
     color: '#fff',
     fontSize: '15px',
     fontWeight: 700,
@@ -477,8 +473,8 @@ const s = {
     display: 'flex',
     alignItems: 'center',
     gap: '14px',
-    background: '#f5f3ff',
-    border: '1.5px solid #ddd6fe',
+    background: '#f8fafc',
+    border: '1px solid #e5e7eb',
     borderRadius: '10px',
     padding: '14px 16px',
     marginBottom: '20px',

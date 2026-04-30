@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { airlineService } from './services/api';
+import etLogo from './assets/ethiopian-airlines.svg';
 
 // ── Stepper bar ──────────────────────────────────────────────────────────────
 const STEPS = ['Verify Order ID', 'Order Details', 'Result'];
@@ -11,22 +12,21 @@ function Stepper({ current }) {
         const num      = i + 1;
         const active   = num === current;
         const done     = num < current;
-        const inactive = num > current;
         return (
           <div key={num} style={s.stepItem}>
             {/* connector line before (skip first) */}
-            {i > 0 && <div style={{ ...s.line, background: done || active ? '#7c3aed' : '#d1d5db' }} />}
+            {i > 0 && <div style={{ ...s.line, background: done || active ? '#1a56db' : '#e5e7eb' }} />}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
               <div style={{
                 ...s.circle,
-                background: active ? '#7c3aed' : done ? '#7c3aed' : '#e5e7eb',
+                background: active ? '#1a56db' : done ? '#16a34a' : '#e5e7eb',
                 color:      active || done ? '#fff' : '#9ca3af',
               }}>
                 {done ? '✓' : num}
               </div>
               <span style={{
                 ...s.stepLabel,
-                color:      active ? '#7c3aed' : done ? '#7c3aed' : '#9ca3af',
+                color:      active ? '#1a56db' : done ? '#16a34a' : '#9ca3af',
                 fontWeight: active ? 600 : 400,
               }}>
                 {label}
@@ -108,7 +108,10 @@ export default function App({ onBack }) {
 
         {/* back + title */}
         <button style={s.backLink} onClick={onBack}>← Back</button>
-        <h1 style={s.title}>✈ Airline Payment</h1>
+        <h1 style={s.title}>
+          <img src={etLogo} alt="Ethiopian Airlines" style={s.etLogo} />
+          Airline Payment
+        </h1>
 
         {/* stepper */}
         <Stepper current={step} />
@@ -249,7 +252,7 @@ export default function App({ onBack }) {
 const s = {
   page: {
     minHeight: '100vh',
-    background: '#f5f3ff',
+    background: '#f1f5f9',
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -259,15 +262,15 @@ const s = {
   card: {
     background: '#fff',
     borderRadius: '16px',
-    boxShadow: '0 4px 32px rgba(124,58,237,0.08)',
-    padding: '32px 32px 36px',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+    padding: '32px 28px',
     width: '100%',
-    maxWidth: '520px',
+    maxWidth: '460px',
   },
   backLink: {
     background: 'none',
     border: 'none',
-    color: '#7c3aed',
+    color: '#1a56db',
     fontSize: '14px',
     cursor: 'pointer',
     padding: 0,
@@ -281,6 +284,15 @@ const s = {
     fontWeight: 700,
     color: '#0f172a',
     textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+  },
+  etLogo: {
+    height: '32px',
+    width: 'auto',
+    objectFit: 'contain',
   },
   // stepper
   stepper: {
@@ -297,7 +309,7 @@ const s = {
   line: {
     height: '2px',
     width: '60px',
-    marginBottom: '22px',   // aligns with circle center
+    marginBottom: '22px',
   },
   circle: {
     width: '36px',
@@ -333,21 +345,21 @@ const s = {
     color: '#374151',
   },
   input: {
-    padding: '11px 14px',
+    padding: '11px 13px',
     borderRadius: '10px',
-    border: '1px solid #e5e7eb',
+    border: '1.5px solid #e5e7eb',
     fontSize: '15px',
     outline: 'none',
     width: '100%',
     boxSizing: 'border-box',
     color: '#111827',
-    background: '#f9fafb',
+    background: '#fafafa',
   },
   btnPrimary: {
     padding: '13px 20px',
     borderRadius: '10px',
     border: 'none',
-    background: '#2563eb',
+    background: '#1a56db',
     color: '#fff',
     fontSize: '15px',
     fontWeight: 700,
@@ -357,7 +369,7 @@ const s = {
   btnSecondary: {
     padding: '13px 20px',
     borderRadius: '10px',
-    border: '1px solid #d1d5db',
+    border: '1.5px solid #e5e7eb',
     background: '#fff',
     color: '#374151',
     fontSize: '15px',
@@ -370,7 +382,7 @@ const s = {
     gap: '10px',
   },
   detailCard: {
-    background: '#f9fafb',
+    background: '#f8fafc',
     border: '1px solid #e5e7eb',
     borderRadius: '10px',
     padding: '14px 16px',
