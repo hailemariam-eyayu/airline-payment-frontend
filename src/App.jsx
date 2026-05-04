@@ -66,8 +66,29 @@ export default function App({ onBack }) {
     setValidateResult(null);
     try {
       const data = await airlineService.validateOrder(orderId.trim());
-      setValidateResult(data);
-      if (data.success === true) setStep(2);
+
+      // Only advance if the order is genuinely pending (statusCodeResponse === 1, "Pending Order").
+      // Expired (2), Cancelled, or any other status is a hard stop — stay on step 1.
+      const raw        = data?.rawResponse ?? {};
+      const statusCode = Number(raw.statusCodeResponse ?? -1);
+      const statusDesc = raw.statusCodeResponseDescription || '';
+      const isExpired  = statusDesc.toLowerCase() === 'expired';
+      const isSuccess  = data.success === true && statusCode === 1 && statusDesc === 'Pending Order';
+
+      if (isSuccess) {
+        setValidateResult(data);
+        setStep(2);
+      } else {
+        // Build a user-friendly error, highlighting "Expired" specifically
+        setValidateResult({
+          success: false,
+          message: isExpired
+            ? 'This order has expired and can no longer be processed.'
+            : data.message || statusDesc || 'Order validation failed.',
+          rawResponse: raw,
+        });
+        // Stay on step 1 — do NOT advance
+      }
     } catch (err) {
       setValidateResult({ success: false, message: err.message || 'Network error' });
     } finally {
@@ -136,18 +157,39 @@ export default function App({ onBack }) {
               </button>
             </form>
 
-            {validateResult && !validateResult.success && (
-              <div style={s.errorBox}>
-                <p style={s.errorTitle}>Validation Failed</p>
-                <p><strong>Message:</strong> {validateResult.message}</p>
-                {validateResult.rawResponse?.message && (
-                  <p><strong>Detail:</strong> {validateResult.rawResponse.message}</p>
-                )}
-                {validateResult.rawResponse?.statusCodeResponseDescription && (
-                  <p><strong>Status:</strong> {validateResult.rawResponse.statusCodeResponseDescription}</p>
-                )}
-              </div>
-            )}
+            {validateResult && !validateResult.success && (() => {
+              const statusDesc = validateResult.rawResponse?.statusCodeResponseDescription || '';
+              const isExpired  = statusDesc.toLowerCase() === 'expired';
+              return (
+                <div style={s.errorBox}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <span style={s.errorIcon}>✗</span>
+                    <p style={{ ...s.errorTitle, margin: 0 }}>
+                      {isExpired ? 'Order Expired' : 'Validation Failed'}
+                    </p>
+                    {isExpired && (
+                      <span style={s.expiredBadge}>Expired</span>
+                    )}
+                  </div>
+                  <p style={{ margin: '4px 0' }}>{validateResult.message}</p>
+                  {validateResult.rawResponse?.orderId && (
+                    <p style={{ margin: '4px 0' }}>
+                      <strong>Order ID:</strong> {validateResult.rawResponse.orderId}
+                    </p>
+                  )}
+                  {validateResult.rawResponse?.expireDate && (
+                    <p style={{ margin: '4px 0' }}>
+                      <strong>Expired on:</strong> {validateResult.rawResponse.expireDate}
+                    </p>
+                  )}
+                  {!isExpired && validateResult.rawResponse?.statusCodeResponseDescription && (
+                    <p style={{ margin: '4px 0' }}>
+                      <strong>Status:</strong> {validateResult.rawResponse.statusCodeResponseDescription}
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
           </>
         )}
 
@@ -408,6 +450,21 @@ const s = {
     lineHeight: 1.6,
   },
   errorTitle: { fontWeight: 700, fontSize: '15px', margin: '0 0 8px' },
+  errorIcon: {
+    width: '20px', height: '20px', borderRadius: '50%',
+    background: '#dc2626', color: '#fff', fontSize: '12px', fontWeight: 700,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
+  expiredBadge: {
+    display: 'inline-block',
+    padding: '2px 8px',
+    borderRadius: '999px',
+    background: '#fef3c7',
+    color: '#92400e',
+    fontSize: '12px',
+    fontWeight: 600,
+    border: '1px solid #fcd34d',
+  },
   resultBox: { textAlign: 'center', padding: '8px 0' },
   iconSuccess: {
     width: '60px', height: '60px', borderRadius: '50%',
