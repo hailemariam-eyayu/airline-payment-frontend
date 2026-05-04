@@ -253,16 +253,19 @@ export default function App({ onBack }) {
                 <div style={s.iconSuccess}>✓</div>
                 <h2 style={{ color: '#16a34a', margin: '0 0 8px' }}>Payment Successful</h2>
                 <p style={{ color: '#6b7280', marginBottom: 16 }}>{confirmResult.message}</p>
-                {confirmResult.rawData && (
-                  <div style={s.detailCard}>
-                    <InfoRow label="Trace Number"    value={confirmResult.rawData.traceNumber} />
-                    <InfoRow label="Transaction No." value={confirmResult.rawData.enatTransactionNo} />
-                    <InfoRow
-                      label="Amount"
-                      value={confirmResult.rawData.amount != null ? `${confirmResult.rawData.amount} ETB` : null}
-                    />
-                  </div>
-                )}
+                <div style={s.detailCard}>
+                  <InfoRow label="Order ID"         value={validateResult?.rawResponse?.orderId} />
+                  <InfoRow label="Customer Name"    value={validateResult?.rawResponse?.customerName} />
+                  <InfoRow label="Utility"          value={validateResult?.rawResponse?.utilityName} />
+                  <InfoRow label="Merchant"         value={validateResult?.rawResponse?.merchantName} />
+                  <InfoRow label="Expire Date"      value={validateResult?.rawResponse?.expireDate} />
+                  <InfoRow label="Trace Number"     value={confirmResult.rawData?.traceNumber} />
+                  <InfoRow label="Transaction No."  value={confirmResult.rawData?.enatTransactionNo} />
+                  <InfoRow
+                    label="Amount"
+                    value={confirmResult.rawData?.amount != null ? `${confirmResult.rawData.amount} ETB` : null}
+                  />
+                </div>
               </>
             ) : (
               <>
